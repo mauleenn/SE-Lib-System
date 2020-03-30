@@ -1,22 +1,14 @@
 package indwes.libsys.functionalities;
 
 import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-
+import java.awt.Font;
 import java.sql.*;
 import javax.swing.*;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-
 import indwes.libsys.dao.LibraryDao;
 import indwes.libsys.main.SqlConnection;
 
-import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -25,7 +17,7 @@ import java.sql.*;
 
 public class Login {
 
-	private JFrame frame;
+	JFrame frmLogin;
 	private JButton createAccountButton;
 
 	/**
@@ -36,7 +28,7 @@ public class Login {
 			public void run() {
 				try {
 					Login window = new Login();
-					window.frame.setVisible(true);
+					window.frmLogin.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -62,23 +54,30 @@ public class Login {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
+		frmLogin = new JFrame();
+		frmLogin.setTitle("Library Management System");
+		frmLogin.setBounds(100, 100, 516, 312);
+		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmLogin.getContentPane().setLayout(null);
 		
 		JLabel usernameLabel = new JLabel("Username");
-		usernameLabel.setBounds(40, 68, 90, 15);
-		frame.getContentPane().add(usernameLabel);
+		usernameLabel.setBounds(80, 65, 90, 15);
+		frmLogin.getContentPane().add(usernameLabel);
 		
 		JLabel passwordLabel = new JLabel("Password");
-		passwordLabel.setBounds(40, 143, 70, 15);
-		frame.getContentPane().add(passwordLabel);
+		passwordLabel.setBounds(70, 142, 70, 15);
+		frmLogin.getContentPane().add(passwordLabel);
 		
 		txtFieldUsername = new JTextField();
-		txtFieldUsername.setBounds(173, 60, 192, 31);
-		frame.getContentPane().add(txtFieldUsername);
+		txtFieldUsername.setBounds(212, 42, 192, 31);
+		frmLogin.getContentPane().add(txtFieldUsername);
 		txtFieldUsername.setColumns(10);
+		
+		
+		JCheckBox checkboxlibrarian = new JCheckBox("Librarian?");
+		checkboxlibrarian.setBounds(70, 161, 129, 23);
+		frmLogin.getContentPane().add(checkboxlibrarian);
+		checkboxlibrarian.setSelected(true);
 		
 		JButton LoginButton = new JButton("Login");
 		LoginButton.addActionListener(new ActionListener() {
@@ -88,12 +87,18 @@ public class Login {
 					 String username = txtFieldUsername.getText();
 					 String password = txtFieldPassword.getText();
 					 
-					 // FUnctionality is included in the LibraryDao class
-					int x = LibraryDao.login(username, password);
-					if (x > 0) {
+					 // Functionality is included in the LibraryDao class
+					boolean x = LibraryDao.login(username, password);
+					if (x == true && checkboxlibrarian.isSelected()) {
 						 JOptionPane.showMessageDialog(null, "Username and password are correct!");
-						 FrontScreenApp window = new FrontScreenApp();
-						window.frmLibrarianFunctions.setVisible(true);
+						 LibrarianView window = new LibrarianView();
+						window.UIFrame.setVisible(true);
+
+					 }
+					else if(x == true && !checkboxlibrarian.isSelected()) {
+						 JOptionPane.showMessageDialog(null, "Username and password are correct!");
+						 UserView window = new UserView();
+						window.UIFrame.setVisible(true);
 
 					 }
 					 else {
@@ -107,18 +112,29 @@ public class Login {
 				
 				
 			}});
-		LoginButton.setBounds(139, 204, 117, 25);
-		frame.getContentPane().add(LoginButton);
+		LoginButton.setBounds(90, 211, 117, 25);
+		frmLogin.getContentPane().add(LoginButton);
 		
-		createAccountButton = new JButton("Create Account");
-		createAccountButton.setBounds(284, 204, 154, 25);
-		frame.getContentPane().add(createAccountButton);
+
+		
+		createAccountButton = new JButton("Sign up");
+		createAccountButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CreateAccount window = new CreateAccount();
+				window.frmCreateANew.setVisible(true);
+			}
+		});
+		createAccountButton.setBounds(273, 211, 154, 25);
+		frmLogin.getContentPane().add(createAccountButton);
 		
 		txtFieldPassword = new JPasswordField();
 		txtFieldPassword.setEchoChar('#');
-		txtFieldPassword.setBounds(173, 135, 192, 31);
-		frame.getContentPane().add(txtFieldPassword);
+		txtFieldPassword.setBounds(212, 120, 192, 31);
+		frmLogin.getContentPane().add(txtFieldPassword);
 		txtFieldPassword.setColumns(10);
+
+		
+
 	}
 }
 
